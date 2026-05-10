@@ -1,0 +1,92 @@
+@import "tailwindcss";
+@import "./styles/dc-tokens.css";
+
+@theme {
+  /* Primary - Electric Lime */
+  --color-primary: #BEF226;
+  --color-on-primary: #1a1a1a;
+  --color-primary-container: #BEF226;
+  --color-on-primary-container: #1a1a1a;
+  --color-primary-dim: #9ABF1D;
+  
+  /* Surface hierarchy (The "Digital Curator" approach) */
+  --color-background: #F7F7F7;
+  --color-surface: #F7F7F7;
+  --color-surface-dim: #EFEFEF;
+  --color-surface-container-low: #F2F4F4;
+  --color-surface-container: #F2F4F4;
+  --color-surface-container-lowest: #FFFFFF;
+  --color-surface-container-high: #E8E8E8;
+  --color-surface-container-highest: #DEDEDE;
+  
+  /* On colors */
+  --color-on-surface: #2d3435;
+  --color-on-surface-variant: #5a6061;
+  --color-on-background: #2d3435;
+  
+  /* Secondary (black for secondary buttons) */
+  --color-secondary: #000000;
+  --color-on-secondary: #FFFFFF;
+  --color-secondary-container: #000000;
+  --color-on-secondary-container: #FFFFFF;
+  
+  /* Tertiary (red for destructive actions) */
+  --color-tertiary: #FF4D4D;
+  --color-on-tertiary: #FFFFFF;
+  --color-tertiary-container: #FF4D4D;
+  --color-on-tertiary-container: #FFFFFF;
+  
+  /* Error */
+  --color-error: #FF4D4D;
+  --color-on-error: #FFFFFF;
+  --color-error-container: #FFE5E5;
+  --color-on-error-container: #8B0000;
+  
+  /* Outline and inverse */
+  --color-outline: #8B8B8B;
+  --color-outline-variant: #C4C4C4;
+  --color-inverse-surface: #1a1a1a;
+  --color-inverse-on-surface: #F7F7F7;
+  --color-inverse-primary: #BEF226;
+  
+  /* Typography */
+  --font-headline: "Manrope", "sans-serif";
+  --font-body: "Inter", "sans-serif";
+  --font-label: "Inter", "sans-serif";
+  --font-display: "Manrope", "sans-serif";
+  
+  /* Border radius */
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  
+  /* Digital Curator UI Styles */
+  --dc-radius: 24px;
+  --dc-radius-pill: 9999px;
+  --dc-bento-gap: 16px;
+}
+
+/* Material Symbols base styling */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F2F4F4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C4C4C4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8B8B8B;
+}

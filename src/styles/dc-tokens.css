@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Digital Curator Design System Tokens */
+  
+  /* Colors - Primary */
+  --dc-primary: #BEF226;
+  --dc-primary-name: "Neon Lime";
+  
+  /* Colors - Secondary */
+  --dc-secondary: #000000;
+  --dc-secondary-name: "Deep Black";
+  
+  /* Colors - Tertiary */
+  --dc-tertiary: #FF4D4D;
+  --dc-tertiary-name: "Coral Red";
+  
+  /* Colors - Neutral */
+  --dc-neutral: #F7F7F7;
+  --dc-neutral-name: "Off-White";
+  
+  /* Typography */
+  --dc-font-headline: "Manrope", sans-serif;
+  --dc-font-body: "Inter", sans-serif;
+  --dc-font-label: "Inter", sans-serif;
+  
+  /* UI Styles */
+  --dc-radius: 24px;
+  --dc-radius-pill: 9999px;
+  --dc-radius-sm: 12px;
+  --dc-radius-md: 16px;
+  --dc-radius-lg: 24px;
+  
+  /* Bento Grid */
+  --dc-bento-gap: 16px;
+  --dc-bento-gap-sm: 8px;
+  --dc-bento-gap-lg: 24px;
+}
