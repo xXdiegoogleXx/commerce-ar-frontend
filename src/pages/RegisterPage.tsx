@@ -2,12 +2,18 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Loader2 } from 'lucide-react'
+import { UserFormFields } from '../components/UserFormFields'
+import type { Gender } from '../services/types'
 
 export function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [role, setRole] = useState('seller')
+  const [documentNumber, setDocumentNumber] = useState('')
+  const [phone, setPhone] = useState('')
+  const [birthDate, setBirthDate] = useState('')
+  const [gender, setGender] = useState<Gender | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { register } = useAuth()
@@ -18,7 +24,16 @@ export function RegisterPage() {
     setError('')
     setLoading(true)
     try {
-      await register({ email, password, name, role })
+      await register({ 
+        email, 
+        password, 
+        name, 
+        role,
+        documentNumber: documentNumber || undefined,
+        phone: phone || undefined,
+        birthDate: birthDate || undefined,
+        gender: gender || undefined
+      })
       navigate('/login')
     } catch (err: any) {
       setError(err.response?.data?.error || 'Error al registrarse')
@@ -77,6 +92,23 @@ export function RegisterPage() {
               <option value="admin">Administrador</option>
             </select>
           </div>
+          
+          <div className="border-t pt-4">
+            <h3 className="text-sm font-medium text-gray-700 mb-3">Datos Personales</h3>
+            <UserFormFields
+              documentNumber={documentNumber}
+              phone={phone}
+              birthDate={birthDate}
+              gender={gender}
+              onDocumentNumberChange={setDocumentNumber}
+              onPhoneChange={setPhone}
+              onBirthDateChange={setBirthDate}
+              onGenderChange={setGender}
+              disabled={loading}
+              required={true}
+            />
+          </div>
+          
           <button
             type="submit"
             disabled={loading}

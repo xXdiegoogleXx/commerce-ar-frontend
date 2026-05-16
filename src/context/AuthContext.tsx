@@ -2,11 +2,22 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import type { User } from '../services/types'
 import { authApi } from '../services/api'
 
+interface RegisterData {
+  email: string
+  password: string
+  name: string
+  role?: string
+  documentNumber?: string
+  phone?: string
+  birthDate?: string
+  gender?: 'masculino' | 'femenino' | 'otros'
+}
+
 interface AuthContextType {
   user: User | null
   loading: boolean
   login: (email: string, password: string) => Promise<void>
-  register: (data: { email: string; password: string; name: string; role?: string }) => Promise<void>
+  register: (data: RegisterData) => Promise<void>
   logout: () => void
   isAdmin: boolean
 }
@@ -34,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(data.user)
   }
 
-  const register = async (userData: { email: string; password: string; name: string; role?: string }) => {
+  const register = async (userData: RegisterData) => {
     await authApi.register(userData)
   }
 

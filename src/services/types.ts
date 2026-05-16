@@ -1,8 +1,15 @@
+export type Gender = 'masculino' | 'femenino' | 'otros'
+
 export interface User {
   id: string
   email: string
   name: string
   role: string
+  documentNumber?: string | null
+  phone?: string | null
+  birthDate?: string | null
+  gender?: Gender | null
+  createdAt: string
 }
 
 export interface LoginResponse {

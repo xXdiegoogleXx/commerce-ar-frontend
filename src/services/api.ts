@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getApiUrl } from '../lib/utils'
-import type { User, Product, Sale, SaleItem, DashboardMetrics, LoginResponse } from './types'
+import type { User, Product, Sale, SaleItem, DashboardMetrics, LoginResponse, Gender } from './types'
 
 const api = axios.create({
   baseURL: '',
@@ -43,8 +43,16 @@ api.interceptors.response.use(
 export const authApi = {
   login: (email: string, password: string) =>
     api.post<LoginResponse>('/api/auth/login', { email, password }),
-  register: (data: { email: string; password: string; name: string; role?: string }) =>
-    api.post('/api/auth/register', data),
+  register: (data: { 
+    email: string; 
+    password: string; 
+    name: string; 
+    role?: string;
+    documentNumber?: string;
+    phone?: string;
+    birthDate?: string;
+    gender?: Gender;
+  }) => api.post('/api/auth/register', data),
   logout: () => api.post('/api/auth/logout', { refreshToken: localStorage.getItem('refreshToken') }),
 }
 
@@ -70,10 +78,20 @@ export const dashboardApi = {
 
 export const usersApi = {
   list: () => api.get<User[]>('/api/users'),
-  create: (data: { email: string; password: string; name: string; role: string }) =>
-    api.post('/api/users', data),
+  create: (data: { 
+    email: string; 
+    password: string; 
+    name: string; 
+    role?: string;
+    documentNumber?: string;
+    phone?: string;
+    birthDate?: string;
+    gender?: Gender;
+  }) => api.post('/api/users', data),
   update: (id: string, data: Partial<User>) => api.put(`/api/users/${id}`, data),
   delete: (id: string) => api.delete(`/api/users/${id}`),
+  getMe: () => api.get<User>('/api/users/me'),
+  updateMe: (data: { phone: string }) => api.put('/api/users/me', data),
 }
 
 export default api

@@ -7,6 +7,7 @@ import { ProductsPage } from './pages/ProductsPage'
 import { ProductFormPage } from './pages/ProductFormPage'
 import { SalesPage } from './pages/SalesPage'
 import { UsersPage } from './pages/UsersPage'
+import { ProfilePage } from './pages/ProfilePage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -76,6 +77,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <UsersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         }
       />

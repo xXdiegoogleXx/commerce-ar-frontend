@@ -152,10 +152,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <span className="absolute top-1 right-1 w-2 h-2 bg-tertiary rounded-full"></span>
             </button>
             
-            {/* Settings */}
-            <button className="p-2 rounded-lg hover:bg-surface-container">
+            {/* Settings / Profile */}
+            <Link to="/profile" className="p-2 rounded-lg hover:bg-surface-container">
               <Settings className="w-5 h-5" />
-            </button>
+            </Link>
           </div>
         </header>
 
