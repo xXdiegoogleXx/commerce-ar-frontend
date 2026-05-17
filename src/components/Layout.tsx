@@ -14,14 +14,16 @@ import {
   Menu,
   X,
   ChevronDown,
-  User
+  User,
+  Building2
 } from 'lucide-react'
 
 const navItems = [
-  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin'] },
-  { path: '/products', label: 'Productos', icon: Package, roles: ['admin', 'seller'] },
-  { path: '/sales', label: 'Ventas', icon: ShoppingCart, roles: ['admin', 'seller'] },
-  { path: '/users', label: 'Usuarios', icon: Users, roles: ['admin'] },
+  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['super_admin', 'admin', 'seller'] },
+  { path: '/products', label: 'Productos', icon: Package, roles: ['super_admin', 'admin', 'seller'] },
+  { path: '/sales', label: 'Ventas', icon: ShoppingCart, roles: ['super_admin', 'admin', 'seller'] },
+  { path: '/users', label: 'Usuarios', icon: Users, roles: ['super_admin', 'admin'] },
+  { path: '/stores', label: 'Tiendas', icon: Building2, roles: ['super_admin'] },
 ]
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -31,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const filteredNav = navItems.filter(
-    (item) => !item.roles || (user && item.roles.includes(user.role))
+    (item) => !item.roles || (user && item.roles.some((r) => r === user.role || (r === 'admin' && isAdmin)))
   )
 
   const handleLogout = () => {

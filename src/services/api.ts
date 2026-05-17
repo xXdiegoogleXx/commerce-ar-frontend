@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getApiUrl } from '../lib/utils'
-import type { User, Product, Sale, SaleItem, DashboardMetrics, LoginResponse, Gender } from './types'
+import type { User, Product, Sale, SaleItem, DashboardMetrics, LoginResponse, Gender, Store } from './types'
 
 const api = axios.create({
   baseURL: '',
@@ -76,6 +76,17 @@ export const dashboardApi = {
   getMetrics: () => api.get<DashboardMetrics>('/api/dashboard'),
 }
 
+export const storesApi = {
+  list: () => api.get<Store[]>('/api/stores'),
+  get: (id: string) => api.get<Store>(`/api/stores/${id}`),
+  create: (data: { name: string; address: string }) => api.post('/api/stores', data),
+  update: (id: string, data: { name: string; address: string }) => api.put(`/api/stores/${id}`, data),
+  delete: (id: string) => api.delete(`/api/stores/${id}`),
+  getUsers: (storeId: string) => api.get<User[]>(`/api/stores/${storeId}/users`),
+  assignUser: (storeId: string, userId: string) => api.post(`/api/stores/${storeId}/users`, { userId }),
+  unassignUser: (storeId: string, userId: string) => api.delete(`/api/stores/${storeId}/users/${userId}`),
+}
+
 export const usersApi = {
   list: () => api.get<User[]>('/api/users'),
   create: (data: { 
@@ -87,8 +98,9 @@ export const usersApi = {
     phone?: string;
     birthDate?: string;
     gender?: Gender;
+    storeId?: string;
   }) => api.post('/api/users', data),
-  update: (id: string, data: Partial<User>) => api.put(`/api/users/${id}`, data),
+  update: (id: string, data: Partial<User> & { storeId?: string }) => api.put(`/api/users/${id}`, data),
   delete: (id: string) => api.delete(`/api/users/${id}`),
   getMe: () => api.get<User>('/api/users/me'),
   updateMe: (data: { phone: string }) => api.put('/api/users/me', data),

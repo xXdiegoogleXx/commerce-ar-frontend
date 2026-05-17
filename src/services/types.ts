@@ -10,6 +10,20 @@ export interface User {
   birthDate?: string | null
   gender?: Gender | null
   createdAt: string
+  stores?: Store[]
+}
+
+export interface Store {
+  id: string
+  name: string
+  address: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface UserStore {
+  userId: string
+  storeId: string
 }
 
 export interface LoginResponse {

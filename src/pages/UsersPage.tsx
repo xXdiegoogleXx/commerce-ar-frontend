@@ -1,15 +1,18 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { usersApi } from '../services/api'
-import type { User, Gender } from '../services/types'
+import { usersApi, storesApi } from '../services/api'
+import type { User, Gender, Store } from '../services/types'
 import { Layout } from '../components/Layout'
+import { useAuth } from '../context/AuthContext'
 import { Loader2, Plus, Trash2, Edit2 } from 'lucide-react'
 import { UserFormFields } from '../components/UserFormFields'
 
 export function UsersPage() {
+  const { isSuperAdmin } = useAuth()
   const queryClient = useQueryClient()
   const [showForm, setShowForm] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [editingUserId, setEditingUserId] = useState<string | null>(null)
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -18,7 +21,8 @@ export function UsersPage() {
     documentNumber: '',
     phone: '',
     birthDate: '',
-    gender: null as Gender | null
+    gender: null as Gender | null,
+    storeId: ''
   })
 
   const { data, isLoading } = useQuery({
@@ -26,12 +30,27 @@ export function UsersPage() {
     queryFn: () => usersApi.list(),
   })
 
+  const { data: storesData } = useQuery({
+    queryKey: ['stores'],
+    queryFn: () => storesApi.list(),
+    enabled: isSuperAdmin,
+  })
+
+  const { data: userStoresData } = useQuery({
+    queryKey: ['store-users', editingUserId],
+    queryFn: () => storesApi.getUsers(editingUserId!).then(r => r.data),
+    enabled: isSuperAdmin && !!editingUserId,
+  })
+
+  const stores: Store[] = storesData?.data || []
+  const userCurrentStore = stores.find(s => (userStoresData as any)?.find((u: any) => u.id === editingUserId))
+
   const createMutation = useMutation({
-    mutationFn: () => usersApi.create(form),
+    mutationFn: () => usersApi.create({ ...form, storeId: form.storeId || undefined } as any),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] })
       setShowForm(false)
-      setForm({ email: '', password: '', name: '', role: 'seller', documentNumber: '', phone: '', birthDate: '', gender: null })
+      setForm({ email: '', password: '', name: '', role: 'seller', documentNumber: '', phone: '', birthDate: '', gender: null, storeId: '' })
     },
   })
 
@@ -65,7 +84,7 @@ export function UsersPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="font-headline text-2xl font-bold text-on-surface">Gestión de Usuarios</h1>
         <button
-          onClick={() => { setShowForm(!showForm); setIsEditing(false); setForm({ email: '', password: '', name: '', role: 'seller', documentNumber: '', phone: '', birthDate: '', gender: null }) }}
+          onClick={() => { setShowForm(!showForm); setIsEditing(false); setForm({ email: '', password: '', name: '', role: 'seller', documentNumber: '', phone: '', birthDate: '', gender: null, storeId: '' }) }}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg hover:opacity-90"
         >
           <Plus className="w-4 h-4" />
@@ -95,6 +114,7 @@ export function UsersPage() {
               >
                 <option value="seller">Vendedor</option>
                 <option value="admin">Administrador</option>
+                {isSuperAdmin && <option value="super_admin">Super Administrador</option>}
               </select>
             </div>
           </div>
@@ -138,6 +158,24 @@ export function UsersPage() {
             />
           </div>
 
+          {isSuperAdmin && (
+            <div>
+              <label className="block text-sm font-body font-medium text-on-surface-variant">
+                {isEditing ? 'Tienda asignada' : 'Asignar a Tienda'}
+              </label>
+              <select
+                value={form.storeId}
+                onChange={(e) => setForm({ ...form, storeId: e.target.value })}
+                className="mt-1 block w-full rounded-lg bg-surface-container px-4 py-2 font-body text-sm text-on-surface focus:outline-none"
+              >
+                <option value="">Sin tienda</option>
+                {stores.map((s) => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={createMutation.isPending || updateMutation.isPending}
@@ -172,14 +210,20 @@ export function UsersPage() {
                   <td className="px-6 py-4 text-sm font-body text-on-surface-variant">{user.documentNumber || '-'}</td>
                   <td className="px-6 py-4 text-sm font-body text-on-surface-variant">{user.phone || '-'}</td>
                   <td className="px-6 py-4 text-sm">
-                    <span className={`px-2 py-1 rounded-full text-xs font-label ${user.role === 'admin' ? 'bg-primary/20 text-primary' : 'bg-surface-container text-on-surface-variant'}`}>
-                      {user.role === 'admin' ? 'Admin' : 'Vendedor'}
+                    <span className={`px-2 py-1 rounded-full text-xs font-label ${
+                      user.role === 'super_admin' ? 'bg-tertiary/20 text-tertiary' :
+                      user.role === 'admin' ? 'bg-primary/20 text-primary' :
+                      'bg-surface-container text-on-surface-variant'
+                    }`}>
+                      {user.role === 'super_admin' ? 'Super Admin' :
+                       user.role === 'admin' ? 'Admin' : 'Vendedor'}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() => {
-                        setForm({ ...form, id: user.id, email: user.email, name: user.name, role: user.role, documentNumber: user.documentNumber || '', phone: user.phone || '', birthDate: user.birthDate ? user.birthDate.split('T')[0] : '', gender: user.gender })
+                        const currentStoreId = (user as any).stores?.[0]?.id || ''
+                        setForm({ ...form, id: user.id, email: user.email, name: user.name, role: user.role, documentNumber: user.documentNumber || '', phone: user.phone || '', birthDate: user.birthDate ? user.birthDate.split('T')[0] : '', gender: user.gender, storeId: currentStoreId })
                         setIsEditing(true)
                         setShowForm(true)
                       }}
