@@ -39,6 +39,11 @@ export interface Product {
   price: number
   stock: number
   category: string | null
+  urlImage?: string | null
+  brand: string
+  barcode?: string | null
+  metadata?: string | null
+  storeId?: string | null
   createdAt: string
   updatedAt: string
 }

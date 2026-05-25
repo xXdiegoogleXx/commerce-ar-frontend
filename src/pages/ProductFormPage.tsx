@@ -18,6 +18,10 @@ export function ProductFormPage() {
     price: 0,
     stock: 0,
     category: '',
+    urlImage: '',
+    brand: 'Genérica',
+    barcode: '',
+    metadata: '',
   })
 
   const { data: product, isLoading } = useQuery({
@@ -34,6 +38,10 @@ export function ProductFormPage() {
         price: product.data.price,
         stock: product.data.stock,
         category: product.data.category || '',
+        urlImage: product.data.urlImage || '',
+        brand: product.data.brand || 'Genérica',
+        barcode: product.data.barcode || '',
+        metadata: product.data.metadata || '',
       })
     }
   }, [product])
@@ -124,6 +132,48 @@ export function ProductFormPage() {
               <option value="Office">Office</option>
               <option value="Accessories">Accessories</option>
             </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Código de Barra (EAN)</label>
+              <input
+                type="text"
+                value={form.barcode}
+                onChange={(e) => setForm({ ...form, barcode: e.target.value.replace(/\D/g, '') })}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                required
+                maxLength={13}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Marca</label>
+              <input
+                type="text"
+                value={form.brand}
+                onChange={(e) => setForm({ ...form, brand: e.target.value })}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">URL de Imagen</label>
+            <input
+              type="url"
+              value={form.urlImage}
+              onChange={(e) => setForm({ ...form, urlImage: e.target.value })}
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+              placeholder="https://ejemplo.com/imagen.jpg"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Metadatos (JSON)</label>
+            <textarea
+              value={form.metadata}
+              onChange={(e) => setForm({ ...form, metadata: e.target.value })}
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-xs"
+              rows={3}
+              placeholder='{"color":"rojo","talle":"M"}'
+            />
           </div>
           <div className="flex gap-4 pt-4">
             <button

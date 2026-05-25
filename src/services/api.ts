@@ -4,7 +4,6 @@ import type { User, Product, Sale, SaleItem, DashboardMetrics, LoginResponse, Ge
 
 const api = axios.create({
   baseURL: '',
-  headers: { 'Content-Type': 'application/json' },
 })
 
 api.interceptors.request.use((config) => {
@@ -85,6 +84,27 @@ export const storesApi = {
   getUsers: (storeId: string) => api.get<User[]>(`/api/stores/${storeId}/users`),
   assignUser: (storeId: string, userId: string) => api.post(`/api/stores/${storeId}/users`, { userId }),
   unassignUser: (storeId: string, userId: string) => api.delete(`/api/stores/${storeId}/users/${userId}`),
+}
+
+export const importApi = {
+  detectColumns: (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api.post<{ headers: string[]; dbFields: string[] }>('/api/products/import/columns', formData)
+  },
+  start: (file: File, columnMapping: Record<string, string>) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('columnMapping', JSON.stringify(columnMapping))
+    return api.post<{ importId: string }>('/api/products/import', formData)
+  },
+  status: (importId: string) => api.get<{
+    status: string
+    total: number
+    processed: number
+    errors: { row: number; error: string }[]
+    importId: string
+  }>(`/api/products/import/${importId}/status`),
 }
 
 export const usersApi = {
